@@ -22,4 +22,4 @@ yarn-error.log*
 
 
 # secrets
-/app/environment/secrets
+/app/environment/secrets.js
