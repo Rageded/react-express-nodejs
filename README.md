@@ -8,7 +8,7 @@
 
  then to install client side dependencies
 
- `cd client | npm install`
+ `cd client; npm install`
 
 ## secrets
 
