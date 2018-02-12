@@ -12,9 +12,9 @@ class ApiWrapper {
 
   };
 
-  getRequest(url, cb) {
+  getRequest(url, cb, parameters) {
 
-    let theUrl = this.mapUrl(url);
+    let theUrl = this.mapUrl(url, parameters);
 
     https.get(theUrl, result => {
 

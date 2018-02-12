@@ -9,16 +9,26 @@ const secret = require('../environment/secrets');
 
 	constructor() {
 		super();
+
 	}
 
 	/**
 	 * Overwritting logic for league
 	 * 
 	 * @param  {String} uri 
+	 * @param {Array} params 
 	 * @return {String}     
 	 */
-	mapUrl(uri) {
-		return secret.leagueUrl + uri + '/?' + secret.leagueKey
+	mapUrl(uri, params) {
+
+		let paramsString = '';
+
+		if (params) {
+			for (let k in params) {
+				paramsString += '&' + params[k];
+			}
+		}
+		return secret.leagueUrl + uri + '/?' + secret.leagueKey + paramsString
 	}
 }
 
