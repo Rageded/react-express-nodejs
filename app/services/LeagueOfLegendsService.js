@@ -91,6 +91,26 @@ class LeagueOfLegendsService {
 		});
 	}
 
+	getMatchById(id, cb) {
+
+		return new Promise((resolve, reject) => {
+
+			this.leagueOfLegendsApi.getRequest('/match/v3/matches/' + id, (err, response) => {
+
+				if (cb) {
+				    if (err) {
+				    	cb(Error(err));
+					  } else {
+					    cb(null, response);
+					  }
+				} else {
+					resolve(response);
+				}
+			});
+
+		});
+	}
+
 	/**
 	 * Get all champions
 	 * 
@@ -122,15 +142,13 @@ class LeagueOfLegendsService {
 			this.leagueOfLegendsApi.getRequest('/static-data/v3/champions/' + id, (err, response) => {
 
 				if (cb) {
-					
-			    if (err) {
+
+				    if (err) {
 			    	cb(Error(err));
 				  } else {
 				    cb(null, response);
 				  }
 				} else {
-					console.log('resolving champ');
-					console.log(response);
 					resolve(response);
 				}
 			}, ['locale=en_US']);
@@ -147,6 +165,7 @@ class LeagueOfLegendsService {
 	 * @return {[type]}        [description]
 	 */
 	getAllSummonersInfo(name, cb) {
+
 		this.getSummonerByName(name, (err, summonerResponse) => {
 			if (err) {
 				cb(Error(err));
@@ -173,6 +192,10 @@ class LeagueOfLegendsService {
 					},
 					 (callback) => {
 						this.getMatchesByAccountId(summonerResponse.accountId, (err, matchHistoryResponse) => {
+
+							if (err) {
+								callback(err);
+							}
 							//only keep 5 for now
 							let remove = matchHistoryResponse.matches.length - 5;
 							let keep = matchHistoryResponse.matches.splice(0, remove);
@@ -181,11 +204,11 @@ class LeagueOfLegendsService {
 								for (let i = 0; i < 5; i++) {
 
 									const response = await this.getChampion(matchHistoryResponse.matches[i].champion);
-									console.log('---------------------');
-									console.log(response);
+									const matchDetail = await this.getMatchById(matchHistoryResponse.matches[i].gameId);
+
 									payload.matches.push({
 										championInfo: response,
-										match: matchHistoryResponse.matches[i]
+										match: matchDetail
 									});
 
 									console.log('adding champ info');

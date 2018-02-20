@@ -2,12 +2,19 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 export default class Main extends Component {
-  state = {
-    response: '',
-    search: ''
-  };
 
-  componentDidMount() {
+  constructor() {
+    super();
+
+    this.state = {
+     matches: []
+    };
+
+    //this.callLeague = this.callLeague.bind(this);
+  }
+  
+
+  componentWillMount() {
     // this.callApi()
     //   .then(res => this.setState({ response: res.express }))
     //   .catch(err => console.log(err));
@@ -16,20 +23,10 @@ export default class Main extends Component {
 
   }
 
-  callLeague() {
-
-    let name = 'rageed';
-
-    axios.get('/league/summoner/name/' + name)
-    .then(function (response) {
-      console.log(response.data.body);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  }
-
   render() {
+
+
+
     return (
       <div >
         <h1>Dashboard</h1>
@@ -70,20 +67,7 @@ export default class Main extends Component {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1,001</td>
-                <td>Lorem</td>
-                <td>ipsum</td>
-                <td>dolor</td>
-                <td>sit</td>
-              </tr>
-              <tr>
-                <td>1,002</td>
-                <td>amet</td>
-                <td>consectetur</td>
-                <td>adipiscing</td>
-                <td>elit</td>
-              </tr>
+              {this.state.matches}
               
             </tbody>
           </table>
@@ -92,5 +76,38 @@ export default class Main extends Component {
 
     );
   }
+
+
+  callLeague = () => {
+
+    let name = 'rageed';
+
+    axios.get('/league/summoner/name/' + name)
+    .then(response => {
+      console.log(response);
+      this.setState({
+        matches: response.data.matches.map(match => {
+          return (
+            <tr>
+              <td>
+                {match.match.lane}
+              </td>
+              <td>
+              </td>
+
+            </tr>
+          );
+        })
+      });
+
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+
+  }
+
+
 
 }
